@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="analyseur-de-ldveh" default="compile" basedir=".">
+
+  <!-- Définition des propriétés -->
+  <property name="analyseur-de-ldveh.src.dir" value="src"/>
+  <property name="analyseur-de-ldveh.build.dir" value="build"/>
+  <property name="analyseur-de-ldveh.lib.dir" value="lib"/>
+  <property name="analyseur-de-ldveh.tests.dir" value="tests"/>
+
+  <!-- Définition du classpath pour inclure les bibliothèques .jar -->
+<path id="analyseur-de-ldveh.classpath">
+    <fileset dir="${analyseur-de-ldveh.lib.dir}">
+      <include name="*.jar"/>
+    </fileset> 
+    <pathelement location="${analyseur-de-ldveh.build.dir}"/>
+  </path>
+
+  <!-- Compilation des classes Java -->
+  <target name="compile" description="Compilation des classes Java">
+    <javac srcdir="${analyseur-de-ldveh.src.dir}" destdir="${analyseur-de-ldveh.build.dir}" debug="on" optimize="off" deprecation="on" includeantruntime="false">
+      <classpath refid="analyseur-de-ldveh.classpath"/>
+    </javac>
+  </target>
+
+  <!-- Initialisation / création du dossier build -->
+  <target name="init">
+    <echo message="Initialisation de ${ant.project.name}"/>
+    <delete dir="${analyseur-de-ldveh.build.dir}"/>
+    <mkdir dir="${analyseur-de-ldveh.build.dir}"/>
+  </target>
+
+  <!-- Exécution après compilation -->
+ <target name="run" description="Exécution" depends="compile">
+    <java classname="main.Main" fork="true">
+        <classpath refid="analyseur-de-ldveh.classpath"/>
+        <arg value="--module-path"/>
+        <arg value="C:\Users\gaming\Downloads\analyseur-de-ldveh\analyseur-de-ldveh\lib"/>
+        <arg value="--add-modules"/>
+        <arg value="javafx.controls,javafx.fxml"/>
+        <arg value="--prism-forceGPU=false"/>
+    </java>
+</target>
+
+
+  <!-- Génération de la documentation Javadoc -->
+  <target name="javadoc" description="Génération de la java doc">
+    <javadoc sourcepath="${analyseur-de-ldveh.src.dir}" destdir="doc" classpathref = "analyseur-de-ldveh.classpath">
+      <fileset dir="${analyseur-de-ldveh.src.dir}" defaultexcludes="yes">
+        <include name="**/*.java"/>
+      </fileset>
+    </javadoc>
+  </target>
+
+  <!-- Création d'un fichier JAR après compilation -->
+  <target name="packaging" depends="compile">
+    <jar jarfile="analyseur-de-ldveh.jar" basedir="${analyseur-de-ldveh.build.dir}" manifest="${basedir}/Manifest.txt"/>
+  </target>
+
+</project>
